@@ -1,6 +1,10 @@
 # See the OWNERS docs at https://go.k8s.io/owners
+#
+# NOTE: This file is being used just as a documentation convention, 
+# since this project is not part of the Kubernetes organization.
 
 approvers:
-  # TODO: in your repo created from this template, you should replace the
-  # github-admin-team with a list of project owners, see the doc linked above.
-  - github-admin-team
+  - cluster-api-charts-maintainers
+
+reviewers:
+  - cluster-api-charts-maintainers
