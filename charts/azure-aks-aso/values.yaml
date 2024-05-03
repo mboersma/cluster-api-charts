@@ -1,0 +1,37 @@
+credentialSecretName: "aso-credentials"
+createCredentials: true
+subscriptionID: ""
+tenantID: ""
+clientID: ""
+clientSecret: ""
+authMode: ""
+
+# clusterName defaults to the name of the Helm release
+clusterName: ""
+location: eastus
+clusterNetwork: null
+kubernetesVersion: v1.28.9
+
+managedClusterAPIVersion: v1api20231001
+managedClusterSpec:
+  identity:
+    type: SystemAssigned
+  servicePrincipalProfile:
+    clientId: msi
+
+managedMachinePoolAPIVersion: v1api20231001
+managedMachinePoolSpecs:
+  pool0:
+    count: 1
+    mode: System
+    vmSize: Standard_DS2_v2
+    type: VirtualMachineScaleSets
+  pool1:
+    count: 1
+    mode: User
+    vmSize: Standard_DS2_v2
+    type: VirtualMachineScaleSets
+
+clusterClassName: ""
+withClusterClass: false
+withClusterTopology: false

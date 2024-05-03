@@ -1,0 +1,123 @@
+{{- if .Values.withClusterClass }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: ClusterClass
+metadata:
+  name: {{ required "value clusterClassName must be set" .Values.clusterClassName | quote }}
+  labels:
+    {{- include "capz.commonLabels" . | nindent 4 }}
+spec:
+  controlPlane:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: AzureASOManagedControlPlaneTemplate
+      name: {{ .Values.clusterClassName | quote }}
+  infrastructure:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: AzureASOManagedClusterTemplate
+      name: {{ .Values.clusterClassName | quote }}
+  workers:
+    machinePools:
+    {{- range $mpName, $mp := .Values.managedMachinePoolSpecs }}
+    - class: {{ quote $mpName }}
+      template:
+        bootstrap:
+          ref:
+            apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+            kind: KubeadmConfigTemplate
+            name: {{ $.Values.clusterClassName | quote }}
+        infrastructure:
+          ref:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+            kind: AzureASOManagedMachinePoolTemplate
+            name: {{ printf "%s-%s" $.Values.clusterClassName $mpName | quote }}
+    {{- end }}
+  patches:
+  - name: azureasomanagedcluster-spec
+    definitions:
+    - selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: AzureASOManagedClusterTemplate
+        matchResources:
+          infrastructureCluster: true
+      jsonPatches:
+      - op: replace
+        path: /spec/template/spec
+        valueFrom:
+          template: |
+            {{- include "capz.azureASOManagedClusterSpec" (list $ "{{ .builtin.cluster.name }}") | nindent 12 }}
+  - name: azureasomanagedcontrolplane-spec
+    definitions:
+    - selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: AzureASOManagedControlPlaneTemplate
+        matchResources:
+          controlPlane: true
+      jsonPatches:
+      - op: replace
+        path: /spec/template/spec
+        valueFrom:
+          template: |
+            {{- include "capz.azureASOManagedControlPlaneSpec" (list $ "{{ .builtin.cluster.name }}") | nindent 12 }}
+  {{- range $mpName, $mp := .Values.managedMachinePoolSpecs }}
+  - name: azureasomanagedmachinepool-{{ $mpName }}-spec
+    definitions:
+    - selector:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: AzureASOManagedMachinePoolTemplate
+        matchResources:
+          machinePoolClass:
+            names:
+            - {{ quote $mpName }}
+      jsonPatches:
+      - op: replace
+        path: /spec/template/spec
+        valueFrom:
+          template: |
+            {{- include "capz.azureASOManagedMachinePoolSpec" (list $ "{{ .builtin.cluster.name }}" $mpName $mp) | nindent 12 }}
+  {{- end }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedClusterTemplate
+metadata:
+  name: {{ .Values.clusterClassName | quote }}
+  labels:
+    {{- include "capz.commonLabels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  template:
+    spec: {} # this gets patched in by the ClusterClass
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedControlPlaneTemplate
+metadata:
+  name: {{ .Values.clusterClassName | quote }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  template:
+    spec: {} # this gets patched in by the ClusterClass
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ .Values.clusterClassName | quote }}
+spec:
+  template:
+    spec: {}
+{{- range $mpName, $mp := .Values.managedMachinePoolSpecs }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedMachinePoolTemplate
+metadata:
+  name: {{ printf "%s-%s" $.Values.clusterClassName $mpName | quote }}
+  labels:
+    {{- include "capz.commonLabels" $ | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  template:
+    spec: {} # this gets patched in by the ClusterClass
+{{- end }}
+{{- end }}{{/* if .Values.withClusterClass */}}
