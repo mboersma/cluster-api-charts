@@ -1,0 +1,9 @@
+apiVersion: v2
+name: azure-managed-cluster
+description: A Helm chart to deploy an AKS cluster via the cluster-api-provider-azure ManagedCluster
+type: application
+maintainers:
+- email: jt572@cornell.edu
+  name: Jont828
+version: 0.2.0
+appVersion: 1.16.0
