@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  azure-managed-cluster:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-05-13T22:49:23.032257445Z"
+    description: A Helm chart to deploy an AKS cluster via the cluster-api-provider-azure
+      ManagedCluster
+    digest: abe8ac9d78599c4d1f4ed925b8ab96aba23b173ff2a410d7fc844cd05465aeb0
+    maintainers:
+    - email: jt572@cornell.edu
+      name: Jont828
+    name: azure-managed-cluster
+    type: application
+    urls:
+    - https://github.com/mboersma/cluster-api-charts/releases/download/azure-managed-cluster-0.2.0/azure-managed-cluster-0.2.0.tgz
+    version: 0.2.0
+generated: "2024-05-13T22:49:23.032266983Z"
