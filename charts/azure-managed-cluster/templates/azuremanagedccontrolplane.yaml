@@ -8,7 +8,7 @@ spec:
     kind: AzureClusterIdentity
     name: {{ $.Values.identity.clusterIdentityName }} 
   location: {{ $.Values.cluster.location }}
-  resourceGroupName: {{ $.Values.cluster.resourceGroupName }}
+  resourceGroupName: {{ $.Values.cluster.resourceGroupName | default .Release.Name }}
   nodeResourceGroupName: {{ $.Values.cluster.nodeResourceGroupName | default (printf "%snodes" .Release.Name) }}
   sshPublicKey: {{ $.Values.controlplane.sshPublicKey | b64enc }}
   subscriptionID: {{ $.Values.subscriptionID }}
@@ -94,7 +94,7 @@ spec:
         name: {{ $.Values.cluster.name | default .Release.Name }}-fleets
         group: {{ $.Values.cluster.name | default .Release.Name }}
         managerName : {{ $.Values.cluster.name | default .Release.Name }}-fleets-manager
-        managerResourceGroup: {{ $.Values.cluster.resourceGroupName }}-fleets 
+        managerResourceGroup: {{ $.Values.cluster.resourceGroupName | default .Release.Name }}-fleets 
     {{- end }}
   sku:
    tier: {{ $.Values.controlplane.sku.tier }}
