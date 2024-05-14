@@ -1,0 +1,87 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: {{ include "capz.clusterName" . | quote }}
+  labels:
+    {{- include "capz.commonLabels" . | nindent 4 }}
+spec:
+{{- if .Values.withClusterTopology }}
+  topology:
+    class: {{ .Values.clusterClassName | quote }}
+    version: {{ .Values.kubernetesVersion | quote }}
+    workers:
+      machinePools:
+      {{- range $mpName, $mp := .Values.managedMachinePoolSpecs }}
+      - class: {{ quote $mpName }}
+        name: {{ quote $mpName }}
+        {{- if (not $mp.enableAutoScaling) }}
+        replicas: {{ default 1 $mp.count}}
+        {{- end }}
+      {{- end }}
+{{- else }}
+  controlPlaneRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: AzureASOManagedControlPlane
+    name: {{ include "capz.clusterName" . | quote }}
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: AzureASOManagedCluster
+    name: {{ include "capz.clusterName" . | quote }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedCluster
+metadata:
+  name: {{ include "capz.clusterName" . | quote }}
+  labels:
+    {{- include "capz.commonLabels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  {{- include "capz.azureASOManagedClusterSpec" (list $ (include "capz.clusterName" $)) | nindent 2 }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedControlPlane
+metadata:
+  name: {{ include "capz.clusterName" . | quote }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  {{- include "capz.azureASOManagedControlPlaneSpec" (list $ (include "capz.clusterName" $)) | nindent 2 }}
+{{- range $mpName, $mp := .Values.managedMachinePoolSpecs }}
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachinePool
+metadata:
+  name: {{ printf "%s-%s" (include "capz.clusterName" $) $mpName | quote }}
+  labels:
+    {{- include "capz.commonLabels" $ | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  clusterName: {{ include "capz.clusterName" $ | quote }}
+  {{- if (ne nil $mp.count) }}
+  replicas: {{ $mp.count }}
+  {{- end }}
+  template:
+    spec:
+      bootstrap:
+        dataSecretName: ""
+      clusterName: {{ include "capz.clusterName" $ }}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: AzureASOManagedMachinePool
+        name: {{ printf "%s-%s" (include "capz.clusterName" $) $mpName | quote }}
+      version: {{ default $.Values.kubernetesVersion $mp.orchestratorVersion | quote }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: AzureASOManagedMachinePool
+metadata:
+  name: {{ printf "%s-%s" (include "capz.clusterName" $) $mpName | quote }}
+  labels:
+    {{- include "capz.commonLabels" $ | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  {{- include "capz.azureASOManagedMachinePoolSpec" (list $ (include "capz.clusterName" $) $mpName $mp) | nindent 2 }}
+{{- end }}
+{{- end }}{{/* if .Values.withClusterTopology */}}
