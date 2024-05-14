@@ -1,4 +1,4 @@
-{{- if not (lookup "infrastructure.cluster.x-k8s.io/v1beta1" "AzureClusterIdentity" .Values.identity.clusterIdentityNamespace .Values.identity.clusterIdentityName) }}
+{{- if not (lookup "infrastructure.cluster.x-k8s.io/v1beta1" "AzureClusterIdentity" .Release.Namespace .Values.identity.clusterIdentityName) }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureClusterIdentity
 metadata:
@@ -6,16 +6,16 @@ metadata:
     clusterctl.cluster.x-k8s.io/move-hierarchy: "true"
   annotations:
     helm.sh/resource-policy: keep
-  name: {{ $.Values.identity.clusterIdentityName }} 
+  name: {{ .Values.identity.clusterIdentityName }} 
 spec:
   allowedNamespaces: 
     list: 
-    - {{ $.Values.identity.clusterIdentitySecretNamespace }}
+    - {{ .Release.Namespace }}
   clientSecret:
-    name: {{ $.Values.identity.clusterIdentitySecretName }} 
-    namespace: {{ $.Values.identity.clusterIdentitySecretNamespace }}
-  clientID: {{ $.Values.identity.clientID }}
-  tenantID: {{ $.Values.identity.tenantID }}
-  type: {{ $.Values.identity.type }}
-  resourceID: {{ $.Values.identity.resourceID }}
+    name: {{ .Values.identity.clusterIdentitySecretName }} 
+    namespace: {{ .Release.Namespace }}
+  clientID: {{ .Values.identity.clientID }}
+  tenantID: {{ .Values.identity.tenantID }}
+  type: {{ .Values.identity.type }}
+  resourceID: {{ .Values.identity.resourceID }}
 {{- end }}
