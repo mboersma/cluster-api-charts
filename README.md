@@ -4,7 +4,7 @@ This project contains [Helm](https://helm.sh/) charts for [Cluster API](https://
 
 ## Installing CAPI Charts
 
-This is the foundational step for any cloud provider to install CAPI and then use any charts from this repository:
+These are the first steps for any cloud provider to use the charts from this repository::
 
 ```shell
 helm repo add capi-operator https://kubernetes-sigs.github.io/cluster-api-operator
@@ -39,7 +39,7 @@ helm install capi-operator capi-operator/cluster-api-operator --create-namespace
 To install an AKS cluster for [CAPZ using the new experimental ASO API](https://capz.sigs.k8s.io/topics/aso.html?highlight=azure%20service%20ope#experimental-aso-api), use the following commands:
 
 ```
-helm install capaksaso capi/azure-aks-aso -f <my_values.yaml>
+helm install capz-aso capi/azure-aks-aso -f <my_values.yaml>
 ```
 
 #### [azure-managed-cluster](./charts/azure-managed-cluster)
