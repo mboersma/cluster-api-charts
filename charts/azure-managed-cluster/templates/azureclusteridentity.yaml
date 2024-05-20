@@ -11,9 +11,11 @@ spec:
   allowedNamespaces: 
     list: 
     - {{ .Release.Namespace }}
+  {{- if .Values.identity.clusterIdentitySecretValue }}
   clientSecret:
     name: {{ .Values.identity.clusterIdentitySecretName }} 
     namespace: {{ .Release.Namespace }}
+  {{- end }}
   clientID: {{ .Values.identity.clientID }}
   tenantID: {{ .Values.identity.tenantID }}
   type: {{ .Values.identity.type }}
