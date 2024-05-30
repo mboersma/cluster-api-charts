@@ -1,1 +1,13 @@
 *.code-workspace
+*.exe
+*.swp
+.DS_Store
+.coverage/
+.idea/
+.vimrc
+.vscode/
+.devcontainer/
+_dist/
+_dist_versions/
+bin/
+vendor/
