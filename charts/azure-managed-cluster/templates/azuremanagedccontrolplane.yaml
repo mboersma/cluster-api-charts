@@ -98,3 +98,4 @@ spec:
     {{- end }}
   sku:
    tier: {{ $.Values.controlplane.sku.tier }}
+  enablePreviewFeatures: {{ $.Values.controlplane.enablePreviewFeatures }}
