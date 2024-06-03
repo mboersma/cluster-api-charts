@@ -104,6 +104,7 @@ controlplane:
   dnsPrefix: ""
   virtualNetwork: {}
   disableLocalAccounts: false
+  enablePreviewFeatures: false
 
 agentPools: []
 
@@ -111,7 +112,7 @@ defaults:
   agentPool:
     mode: User
     # Note: Only 1 Nodepool of mode System is allowed so we default to User.
-    sku: Standard_DS4_v2
+    sku: Standard_DS2_v2
     nodecount: 1
     osDiskSizeGB: 32
     availabilityZones:

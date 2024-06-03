@@ -15,6 +15,7 @@ helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
+  --version v1.14.5 \
   --set installCRDs=true
 ```
 
@@ -24,7 +25,7 @@ Use this command to install CAPI with the Azure provider (CAPZ) and all feature 
 
 ```shell
 helm install capi-operator capi-operator/cluster-api-operator --create-namespace -n capi-operator-system \
---set infrastructure="azure" \
+--set infrastructure="azure:v1.15.1" \
 --set manager.featureGates.core.MachinePool="true" \
 --set manager.featureGates.azure.MachinePool="true" \
 --set manager.featureGates.azure.ASOAPI="true" \
