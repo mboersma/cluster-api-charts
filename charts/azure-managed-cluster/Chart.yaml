@@ -5,5 +5,5 @@ type: application
 maintainers:
 - email: jt572@cornell.edu
   name: Jont828
-version: 0.2.3
+version: 0.2.4
 appVersion: 1.16.0
