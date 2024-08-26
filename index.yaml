@@ -3,6 +3,19 @@ entries:
   azure-aks-aso:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-08-26T11:46:33.83728609Z"
+    description: A chart describing an AKS cluster for CAPZ using the ASO API
+    digest: 3f9f210a57d95a6830139195eeb21f5f85c99e2cc7e40aeea9414e82a24a1504
+    maintainers:
+    - email: Matt.Boersma@microsoft.com
+      name: mboersma
+    name: azure-aks-aso
+    type: application
+    urls:
+    - https://github.com/mboersma/cluster-api-charts/releases/download/azure-aks-aso-0.2.0/azure-aks-aso-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2024-05-14T16:39:50.198497299Z"
     description: A chart describing an AKS cluster for CAPZ using the ASO API
     digest: 3fbe066502e1b54567af2c7958d1984b72b76efabfced673bbf0663ce3faf4ea
@@ -85,4 +98,4 @@ entries:
     urls:
     - https://github.com/mboersma/cluster-api-charts/releases/download/azure-managed-cluster-0.2.0/azure-managed-cluster-0.2.0.tgz
     version: 0.2.0
-generated: "2024-07-07T00:00:08.526411455Z"
+generated: "2024-08-26T11:46:33.837306939Z"
