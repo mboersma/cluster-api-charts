@@ -10,7 +10,7 @@ authMode: ""
 clusterName: ""
 location: eastus
 clusterNetwork: null
-kubernetesVersion: v1.28.9
+kubernetesVersion: v1.30.3
 
 managedClusterAPIVersion: v1api20231001
 managedClusterSpec:
