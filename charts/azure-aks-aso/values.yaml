@@ -15,22 +15,49 @@ clusterNetwork: null
 kubernetesVersion: v1.30.3
 
 managedClusterAPIVersion: v1api20231001
+# https://azure.github.io/azure-service-operator/reference/containerservice/v1api20231001/#containerservice.azure.com/v1api20231001.ManagedCluster_Spec
 managedClusterSpec:
+  autoUpgradeProfile:
+    nodeOSUpgradeChannel: NodeImage
+    upgradeChannel: stable
+  disableLocalAccounts: false
+  enableRBAC: true
   identity:
     type: SystemAssigned
   servicePrincipalProfile:
     clientId: msi
+  sku:
+    tier: Free
+  supportPlan:
+    KubernetesSupportPlan: KubernetesOfficial
 
 managedMachinePoolAPIVersion: v1api20231001
-managedMachinePoolSpecs:
+# https://azure.github.io/azure-service-operator/reference/containerservice/v1api20231001/#containerservice.azure.com/v1api20231001.ManagedClusters_AgentPool_Spec
+managedMachinePoolSpecs: 
   pool0:
     count: 1
+    enableAutoScaling: true
+    enableEncryptionAtHost: false
+    enableFIPS: false
+    enableNodePublicIP: false
+    enableUltraSSD: false
+    maxCount: 3
+    minCount: 1
     mode: System
+    osSKU: AzureLinux
     vmSize: Standard_DS2_v2
     type: VirtualMachineScaleSets
   pool1:
     count: 1
+    enableAutoScaling: true
+    enableEncryptionAtHost: false
+    enableFIPS: false
+    enableNodePublicIP: false
+    enableUltraSSD: false
+    maxCount: 3
+    minCount: 0
     mode: User
+    osSKU: AzureLinux
     vmSize: Standard_DS2_v2
     type: VirtualMachineScaleSets
 
