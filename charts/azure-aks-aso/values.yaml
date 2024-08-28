@@ -3,12 +3,14 @@ createCredentials: true
 subscriptionID: ""
 tenantID: ""
 clientID: ""
+# Leave clientSecret blank if using WorkloadIdentity
 clientSecret: ""
-authMode: ""
+# Set to podIdentity for managed identity or service principal even if NOT using pod identity
+authMode: "workloadIdentity"
 
 # clusterName defaults to the name of the Helm release
 clusterName: ""
-location: eastus
+location: westus3
 clusterNetwork: null
 kubernetesVersion: v1.30.3
 
@@ -32,6 +34,6 @@ managedMachinePoolSpecs:
     vmSize: Standard_DS2_v2
     type: VirtualMachineScaleSets
 
-clusterClassName: ""
+clusterClassName: "aksasoclass"
 withClusterClass: false
 withClusterTopology: false

@@ -7,6 +7,8 @@ This Helm chart is used to deploy an Azure Kubernetes Service (AKS) Cluster usin
 Create a Kubernetes cluster to serve as a Cluster API management cluster. (For example, with `kind`.) Install the Cluster API Provider Azure (CAPZ) components on it with:
 
 ```shell
+export EXP_MACHINE_POOL=true
+export CLUSTER_TOPOLOGY=true
 clusterctl init --infrastructure azure
 ```
 
@@ -18,7 +20,9 @@ helm repo add capi https://mboersma.github.io/cluster-api-charts
 
 ## Specify values for the CAPZ AKS-ASO chart
 
-Create a `values.yaml` file to specify credentials and other values for the CAPZ AKS-ASO chart. It can look like the following:
+Create a `values.yaml` file to specify credentials and other values for the CAPZ AKS-ASO chart. This populates the [ASO configuration values](https://azure.github.io/azure-service-operator/guide/aso-controller-settings-options/) scoped to the management cluster resource.  To set global ASO credentials, modify the global ASO secret installed with CAPZ via `kubectl edit secrets aso-controller-settings -n capz-system`.
+
+It can look like the following:
 
 ```yaml
 credentialSecretName: "aso-credentials"
@@ -26,28 +30,26 @@ createCredentials: true
 subscriptionID: ""
 tenantID: ""
 clientID: ""
+# Leave clientSecret blank if using WorkloadIdentity
 clientSecret: ""
-authMode: ""
+# set to podIdentity for managed identity or service principal even if NOT using pod identity
+authMode: "workloadIdentity"
 
 # clusterName defaults to the name of the Helm release
 clusterName: ""
-location: eastus
-clusterNetwork: null
-kubernetesVersion: v1.28.9
-subscriptionID: <subscription-id>
-identity:
-  clientID: <client-id>
-  tenantID: <tenant-id>
-  type: WorkloadIdentity
-cluster:
-  location: eastus
-  cidrBlocks:
-  - 192.168.0.0/16
-controlplane:
-  sshPublicKey: <ssh-public-key>
-  networkPolicy: "calico"
-  networkPlugin: "kubenet"
-  networkPluginMode: null
+location: westus3
+
+managedMachinePoolSpecs:
+  pool0:
+    count: 1
+    mode: System
+    vmSize: Standard_DS2_v2
+    type: VirtualMachineScaleSets
+  pool1:
+    count: 1
+    mode: User
+    vmSize: Standard_DS2_v2
+    type: VirtualMachineScaleSets
 ```
 
 ## Install the CAPZ AKS-ASO Helm chart
@@ -61,3 +63,5 @@ helm install <name> capi/azure-aks-aso -f values.yaml
 ```bash
 helm uninstall <name>
 ```
+
+> Note: there are a number of AKSASO* resources which will say have not been deleted. This is by design to ensure proper complete cleanup.  The root cluster object will be deleted and that will cascade down to delete all the resources provisioned by the helm chart.  The only thing which will remain is the credentials secret and that can be found in the namespace where the chart provisioned.
