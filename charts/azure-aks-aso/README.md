@@ -50,6 +50,10 @@ managedMachinePoolSpecs:
     mode: User
     vmSize: Standard_DS2_v2
     type: VirtualMachineScaleSets
+
+clusterClassName: "aksasoclass"
+withClusterClass: false
+withClusterTopology: false
 ```
 
 ## Install the CAPZ AKS-ASO Helm chart
@@ -57,6 +61,26 @@ managedMachinePoolSpecs:
 ```bash
 helm install <name> capi/azure-aks-aso -f values.yaml
 ```
+
+## Install the CAPZ AKS-ASO Helm chart with ClusterClass
+
+Be sure to set both of these values to `true` in the values.yaml file.
+```yaml
+withClusterClass: true
+withClusterTopology: true
+```
+
+```
+helm install <name> capi/azure-aks-aso -f values.yaml
+```
+
+On the first install, there will be this message and it is expected since the clusterclass needs to provision first.  It will eventually reconcile successfully.
+
+```shell
+W0829 14:39:51.801605   93841 warnings.go:70] Cluster refers to ClusterClass default/aksasoclass, but this ClusterClass does not exist. Cluster topology has not been fully validated. The ClusterClass must be created to reconcile the Cluster
+```
+
+After the ClusterClass is created, it is possible to stamp out numerous instances of that Clusterclass using just ClusterTopology by changing `withClusterClass: false` and doing different helm chart installations against that same management cluster with different release names.
 
 ## Uninstall the CAPZ AKS-ASO Helm chart
 

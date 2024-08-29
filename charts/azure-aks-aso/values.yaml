@@ -27,13 +27,13 @@ managedClusterSpec:
   servicePrincipalProfile:
     clientId: msi
   sku:
+    name: Base
     tier: Free
-  supportPlan:
-    KubernetesSupportPlan: KubernetesOfficial
+  supportPlan: "KubernetesOfficial"
 
 managedMachinePoolAPIVersion: v1api20231001
 # https://azure.github.io/azure-service-operator/reference/containerservice/v1api20231001/#containerservice.azure.com/v1api20231001.ManagedClusters_AgentPool_Spec
-managedMachinePoolSpecs: 
+managedMachinePoolSpecs:
   pool0:
     count: 1
     enableAutoScaling: true
