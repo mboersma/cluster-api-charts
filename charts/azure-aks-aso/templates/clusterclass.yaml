@@ -28,7 +28,7 @@ spec:
             name: {{ $.Values.clusterClassName | quote }}
         infrastructure:
           ref:
-            apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
             kind: AzureASOManagedMachinePoolTemplate
             name: {{ printf "%s-%s" $.Values.clusterClassName $mpName | quote }}
     {{- end }}
