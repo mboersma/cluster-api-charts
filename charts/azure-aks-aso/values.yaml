@@ -6,7 +6,7 @@ clientID: ""
 # Leave clientSecret blank if using WorkloadIdentity
 clientSecret: ""
 # Set to podIdentity for managed identity or service principal even if NOT using pod identity
-authMode: "workloadIdentity"
+authMode: "workloadidentity"
 
 # clusterName defaults to the name of the Helm release
 clusterName: ""
