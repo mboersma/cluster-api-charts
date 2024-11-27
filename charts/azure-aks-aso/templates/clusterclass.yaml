@@ -3,6 +3,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: ClusterClass
 metadata:
   name: {{ required "value clusterClassName must be set" .Values.clusterClassName | quote }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "capz.commonLabels" . | nindent 4 }}
 spec:
@@ -81,6 +82,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: AzureASOManagedClusterTemplate
 metadata:
   name: {{ .Values.clusterClassName | quote }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "capz.commonLabels" . | nindent 4 }}
   annotations:
@@ -93,6 +95,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: AzureASOManagedControlPlaneTemplate
 metadata:
   name: {{ .Values.clusterClassName | quote }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/resource-policy: keep
 spec:
@@ -103,6 +106,7 @@ apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
   name: {{ .Values.clusterClassName | quote }}
+  namespace: {{ .Release.Namespace }}
 spec:
   template:
     spec: {}
@@ -112,6 +116,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: AzureASOManagedMachinePoolTemplate
 metadata:
   name: {{ printf "%s-%s" $.Values.clusterClassName $mpName | quote }}
+  namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "capz.commonLabels" $ | nindent 4 }}
   annotations:
