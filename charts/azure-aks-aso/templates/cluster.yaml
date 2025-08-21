@@ -21,15 +21,15 @@ spec:
       {{- end }}
 {{- else }}
   controlPlaneRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: AzureASOManagedControlPlane
     name: {{ include "capz.clusterName" . | quote }}
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: AzureASOManagedCluster
     name: {{ include "capz.clusterName" . | quote }}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureASOManagedCluster
 metadata:
   name: {{ include "capz.clusterName" . | quote }}
@@ -41,7 +41,7 @@ metadata:
 spec:
   {{- include "capz.azureASOManagedClusterSpec" (list $ (include "capz.clusterName" $)) | nindent 2 }}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureASOManagedControlPlane
 metadata:
   name: {{ include "capz.clusterName" . | quote }}
@@ -72,12 +72,12 @@ spec:
         dataSecretName: ""
       clusterName: {{ include "capz.clusterName" $ }}
       infrastructureRef:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: AzureASOManagedMachinePool
         name: {{ printf "%s-%s" (include "capz.clusterName" $) $mpName | quote }}
       version: {{ default $.Values.kubernetesVersion $mp.orchestratorVersion | quote }}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureASOManagedMachinePool
 metadata:
   name: {{ printf "%s-%s" (include "capz.clusterName" $) $mpName | quote }}
